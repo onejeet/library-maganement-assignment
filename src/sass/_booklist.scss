@@ -1,37 +1,220 @@
 @import 'bookcard';
-@mixin booklist($color, $bckColor){
+@mixin booklist($color, $bckColor, $shadowColor){
+    @include bookcard($color, $bckColor, $shadowColor);
     .controls{
         padding: 0 10px;
         display: flex;
         justify-content: flex-start;
         margin-bottom: 20px;
-        .add-book{
-            border-radius: 4px;
-            padding: 5px 8px;
-            border: 1px solid $color;
-            cursor: pointer;
-        }
+        position: relative;
+        flex-wrap: wrap;
         .search{
             margin-left: auto;
+            position: relative;
+            margin-right: 10px;
+            margin-bottom: 5px;
             input{
                 padding: 5px;
                 font-size: 16px;
                 border-radius: 4px;
+                height: 100%;
+                width: 100%;
+            }
+            .search-icon{
+                position: absolute;
+                right: 10px;
+                top: calc(50% - 8px);
+                cursor: pointer;
             }
         }
-        .filter{
+        &_button{
+            width: fit-content;
             border-radius: 4px;
             padding: 5px 8px;
             border: 1px solid $color;
-            margin-left: 10px;
+            margin-right: 10px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+            &:last-of-type{
+                margin-right: 0;
+            }
+
         }
+        .category-box{
+            position: absolute;
+            right: 10px;
+            top: 40px;
+            min-width: 300px;
+            min-height: 200px;
+            border: 2px solid $shadowColor;
+            box-shadow: 0 2px 5px $shadowColor;
+            border-radius: 4px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: wrap;
+            z-index: 9999;
+            background: $bckColor;
+            color: $color;
+            padding: 10px;
+            .item{
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                flex-wrap: wrap;
+                margin-right: 15px;
+                input{
+                    margin-right: 5px;
+                    appearance: button;
+                }
+            }
+        }
+        @media only screen and (max-width: 800px) {
+            justify-content: center;
+            .search{
+                margin-left: 0;
+                flex-basis: 100%;
+                width: 100%;
+            }
+            .addbook{
+                order: 3;
+            }
+            .category-box{
+                right: 0;
+                left: 0;
+                top: 80px;
+            }
+        } 
     }
     .book-list{
         display: flex;
         justify-content: flex-start;
         align-items: flex-start;
         flex-wrap: wrap;
-        @include bookcard($color, $bckColor)
+        @media only screen and (max-width: 800px) {
+            justify-content: center;
+        }
     }
+    .pagination{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 40px 0;
+        .navigation-button{
+            padding: 10px 15px;
+            border-radius: 4px;
+            background-color: $color;
+            color: $bckColor;
+            border: 1px solid $color;
+            margin-right: 30px;
+            cursor: pointer;
+            position: relative;
+            min-width: 110px;
+            min-height: 40px;
+        }
+    }
+    .add-book-wrapper{
+        min-width: 300px;
+        max-width:60%;
+        margin: 50px auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        min-height: 350px;
+        box-shadow: 0 2px 5px $shadowColor;
+        padding: 10px 50px;
+        form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+            margin-right: 50px;
+            min-width: 200px;
+            padding: 20px;
+            position: relative;
+            .error{
+                text-align: center;
+                color: red;
+            }
+            label{
+                margin-right: 10px
+            }
+            input:not([type="submit"]){
+                padding: 8px 0 2px;
+                font-size: 16px;
+                display: block;
+                margin-bottom: 10px;
+                border:none;
+                border-bottom: 2px solid $shadowColor;
+                background-color: transparent;
+                color: $color;
+                outline: none;
+                &:focus{
+                    border-bottom: 2px solid $primary;
+                }
+            }
+            .submit-button{
+                margin-top: 20px;
+                padding: 10px 15px;
+                border-radius: 4px;
+                font-size: 18px;
+                cursor: pointer;
+                background-color: $primary;
+                color: #FFFFFF;
+                border: none;
+                transition: all 0.2s ease;
+                &:hover{
+                    background-color: $primaryHover;
+                }
+            }
+            .dropdown-class{
+                position: relative;
+            }
+        }
+        .live-display{
+            width: 200px;
+            min-height: 300px;
+            position: relative;
+            .placeholder{
+                position: absolute;
+                text-align: center;
+                color: $shadowColor;
+                top: calc(50% - 10px);
+            }
+        }
+    }
+    .message{
+        text-align: center;
+    }
+    .dropdown-wrapper{
+        position: absolute;
+        width: 100%;
+        top: -5px;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 5px $shadowColor;
+        max-height: 300px;
+        overflow: scroll;
+        font-size: 14px;
+        min-width: 200px;
+        max-width: fit-content;
+        z-index: 9999;
+        .dropdown-item{
+            width: 100%;
+            padding: 10px 0 10px 5px;
+            cursor: pointer;
+            background: $bckColor;
+            color: $color;
+            border-bottom: 1px solid $shadowColor;
+            &.selected{
+                background: $primary;
+                color: #FFFFFF;
+            }
+        }
+    }
+
 }

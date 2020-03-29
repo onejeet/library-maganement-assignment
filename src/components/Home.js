@@ -1,15 +1,13 @@
 import React, { Component } from "react";
-import ListControls from "./ListControls";
 import BookList from "./BookList";
-import { sortBooks, filterBooks } from "../Utilities/helper";
-const FontAwesome = require('react-fontawesome');
+import { sortBooks, filterByCategory } from "../Utilities/helper";
 
 class Home extends Component {
     constructor(props){
         super(props);
         this.state = {
-            query: "",
-            ascSorting: true
+            ascSorting: null,
+            categoryFilters : []
         }
     }
 
@@ -18,34 +16,41 @@ class Home extends Component {
             ascSorting : !this.state.ascSorting
         })
     }
-    updateQuery = (e) => {
-        e.preventDefault();
-        this.setState({
-            query: e.target.value
-        })
-    }
 
-    componentDidMount(){
-        if(!this.props.library.length > 0){
-            this.props.updateLoadingStatus(true);
-            this.props.fetchLibrary();
+    selectCategory = (e, c) => {
+        const { categoryFilters } = this.state;
+        let index = categoryFilters.findIndex((x) => x == c.id);
+        if(index < 0){
+            categoryFilters.push(c.id);
+        }else{
+            categoryFilters.splice(index, 1);
         }
+        
+        this.setState({
+            categoryFilters
+        })
     }
 
     render(){
         let { library } = this.props;
-        let records = filterBooks(sortBooks(library, this.state.ascSorting), this.state.query);
+        console.log(this.state);
+        let records = filterByCategory(sortBooks(library, this.state.ascSorting), this.state.categoryFilters);
+
         return (
             <div className="home">
-                <ListControls
-                query = {this.state.query}
-                updateQuery = {this.updateQuery}
-                updateSorting = {this.updateSorting}
-                ascSorting = {this.state.ascSorting}
-                />
-                <BookList
-                records = {records}
-                />
+                {
+                    records.length > 0 &&
+                    <BookList
+                    records = {records}
+                    fetchNextPage = {this.props.fetchNextPage}
+                    updateSorting = {this.updateSorting}
+                    ascSorting = {this.state.ascSorting}
+                    fetchLibrary = {this.props.fetchLibrary}
+                    categories = {this.props.categories}
+                    syncWithLocalStorage = {this.props.syncWithLocalStorage}
+                    selectCategory = {this.selectCategory}
+                    />
+                }
             </div>
         );
     }

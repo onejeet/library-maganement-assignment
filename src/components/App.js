@@ -4,16 +4,26 @@ import { API_KEY, MAX_RECORDS } from "../Utilities/Constants";
 import Routes from "../Routes";
 import Header from "./Header";
 const FontAwesome = require('react-fontawesome');
+const Airtable = require('airtable');
+const base = new Airtable({apiKey: API_KEY}).base('appbiRsagJs9mSVXY');
 
 class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            isLoading: false,
             lightTheme: true,
-            isAuthenticated: true,
+            isAuthenticated: false,
             userInfo: {},
-            library: []
+            library: [],
+            categories: [],
+            fetchNextPage: null
+        }
+    }
+
+    componentDidMount(){
+        let ls = JSON.parse(localStorage.getItem("userinfo"));
+        if(ls){
+            this.updateAuthentication(true, ls);          
         }
     }
 
@@ -23,46 +33,86 @@ class App extends Component {
         })
     }
 
-    updateLoadingStatus = (bool) => {
-        this.setState({
-            isLoading: bool
-        })
-    }
-
     updateAuthentication = (bool, userInfo) => {
         this.setState({
             isAuthenticated: bool,
             userInfo
         }, () => {
             this.fetchLibrary();
+            this.loadCategories();
+            if(userInfo){
+                localStorage.removeItem("userinfo");
+                localStorage.setItem("userinfo", JSON.stringify(userInfo));
+            }
             this.props.history.push("/");
         });
     }
 
-
-    fetchLibrary = () => {
-        let url = `https://api.airtable.com/v0/appbiRsagJs9mSVXY/library?api_key=${API_KEY}&maxRecords=${MAX_RECORDS}`;
-        if(!this.state.isLoading){
-            fetch(url)
-            .then((res) => res.json())
-            .then((data) => {
-                this.setState({
-                    library: data.records.map((r) => r.fields),
-                    isLoading: false
-                });
-            })
-            .catch((error) => {
-                this.updateLoadingStatus(false);
-                // error
-            })
+    loadCategories = () => {
+        let self = this;
+        let config = {
+            view: "Grid view"
         }
+        base('category').select(config).eachPage(function page(records, fetchNextPage){
+            self.setState({
+                categories: records.map((r) => r.fields),
+            });
+        }, function done(err) {
+            if(err){ 
+                return; 
+            }
+        });
+    }
+
+    fetchLibrary = (search = "") => {
+        let self = this;
+        let config = {
+            pageSize: MAX_RECORDS,
+            view: "Grid view"
+        }
+        if(search){
+            config.filterByFormula = search;
+        }
+        base('library').select(config).eachPage(function page(records, fetchNextPage){
+            if(!search){
+                let lib = self.state.library.concat(records.map((r) => r.fields));
+                self.setState({
+                    library: lib,
+                    fetchNextPage: fetchNextPage
+                }, () => {
+                    localStorage.removeItem("library");
+                    localStorage.setItem("library", JSON.stringify(lib));
+                });
+            }else{
+                self.setState({
+                    library: records.map((r) => r.fields),
+                });
+            }
+        }, function done(err) {
+            if(err){ 
+                console.error(err); 
+                return; 
+            }
+        });
+    }
+
+    syncWithLocalStorage = (lib) => {
+        this.setState({
+            library: lib
+        })
     }
 
 
     logout = () => {
         this.setState({
-            isAuthenticated: false
+            isAuthenticated: false,
+            userInfo: {},
+            library: [],
+            categories: [],
+            fetchNextPage: null
         }, () => {
+            localStorage.removeItem("library");
+            localStorage.removeItem("userinfo");
             this.props.history.push("/login");
         });
     }
@@ -71,14 +121,16 @@ class App extends Component {
         let childProps = {
             isAuthenticated : this.state.isAuthenticated,
             updateAuthentication: this.updateAuthentication,
-            fetchLibrary: this.fetchLibrary,
+            fetchNextPage: this.state.fetchNextPage,
+            fetchLibrary : this.fetchLibrary,
             library: this.state.library,
             userInfo : this.state.userInfo,
-            updateLoadingStatus: this.updateLoadingStatus
+            categories: this.state.categories,
+            syncWithLocalStorage: this.syncWithLocalStorage
         };
         return (
             <>
-                <div className={`app ${this.state.lightTheme ? 'light' : 'dark'} ${this.state.isLoading ? "blur" : ""}`}>
+                <div className={`app ${this.state.lightTheme ? 'light' : 'dark'} `}>
                     {
                         this.state.isAuthenticated &&
                         <Header 
@@ -94,18 +146,6 @@ class App extends Component {
                         <Routes childProps={childProps} />
                     </div>
                 </div>
-                { 
-                    this.state.isLoading  &&
-                    <div className="loading">
-                        <FontAwesome
-                            className='loading-icon'
-                            name='spinner'
-                            size='4x'
-                            spin
-                            style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
-                        />
-                    </div>
-                }
                 <div className="footer">
                     
                 </div>

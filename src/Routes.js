@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import MyBooks from "./components/MyBooks";
 import AddBook from "./components/AddBook";
+import SearchResult from "./components/SearchResult";
 
 
 const Routes = ({ childProps }) => {
@@ -16,6 +17,7 @@ const Routes = ({ childProps }) => {
             <PrivateRoute exact path="/" component={Home} props={childProps}></PrivateRoute>
             <PrivateRoute exact path="/mybooks" component={MyBooks} props={childProps}></PrivateRoute>
             <PrivateRoute exact path="/addbook" component={AddBook} props={childProps}></PrivateRoute>
+            <PrivateRoute exact path="/search:query" component={SearchResult} props={childProps}></PrivateRoute>
         </Switch>
     );
 }

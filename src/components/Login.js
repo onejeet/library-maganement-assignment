@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { API_KEY } from "../Utilities/Constants";
 import { Link } from "react-router-dom";
+import Loader from "./Loader";
 
 const FontAwesome = require('react-fontawesome');
 
@@ -10,7 +11,8 @@ class Login extends Component{
         this.state = {
             username: "",
             password: "",
-            error: ""
+            error: "",
+            loading: false
         }
     }
 
@@ -23,9 +25,11 @@ class Login extends Component{
 
     onSubmit = (e) => {
         e.preventDefault();
+        this.setState({
+            loading: true
+        })
         const {username, password} = this.state;
         if(username && password){
-            this.props.updateLoadingStatus(true);
             fetch(`https://api.airtable.com/v0/appbiRsagJs9mSVXY/user?api_key=${API_KEY}`)
             .then((res) => res.json())
             .then((data) => {
@@ -33,19 +37,19 @@ class Login extends Component{
                     return (r.fields.username === username && r.fields.password === password)
                 })[0];
                 if(Object.keys(user.fields).length > 0){
-                    this.props.updateLoadingStatus(false);
                     this.props.updateAuthentication(true, user.fields);
                 }
             })
             .catch((error) => {
-                this.props.updateLoadingStatus(false);
                 this.setState({
-                    error: "Invalid username or password. Try again!"
+                    error: "Invalid username or password!",
+                    loading: false
                 })
             });
         }else{
             this.setState({
-                error: "Username or password can't be blank."
+                error: "Username or password can't be blank.",
+                loading: false
             })
         }
         
@@ -74,7 +78,15 @@ class Login extends Component{
                             {this.state.error}
                         </div>
                     }
-                    <input type="submit" value="Login" className="submit-button" />
+                    <div className="submit-button">
+                        {
+                            this.state.loading
+                            ? <Loader />
+                            : <input type="submit" value="Login" />
+                        }
+                        
+                    </div>
+                    
                 </form>
             </div>
         );

@@ -1,3 +1,5 @@
+import { API_KEY, MAX_RECORDS } from "../Utilities/Constants";
+
 export const filterBooks = (lib, query) => {
     query = query.toLowerCase();
     if(query.length > 0){
@@ -12,12 +14,22 @@ export const filterBooks = (lib, query) => {
 
 
 export const sortBooks = (lib, ascSorting) => {
-    let records = lib.sort((a, b) => {
-        let comp = a.title.toUpperCase() > b.title.toUpperCase() ? 1 : -1;
-        if(ascSorting){
-            return comp;
-        }
-        return comp * -1;
-    })
+    if(ascSorting !== null){
+        let records = lib.sort((a, b) => {
+            let comp = a.title.toUpperCase() > b.title.toUpperCase() ? 1 : -1;
+            if(ascSorting){
+                return comp;
+            }
+            return comp * -1;
+        })
+        return records;
+    }
+    return lib;
+}
+
+export const filterByCategory = (records, filterArray) => {
+    if(filterArray.length > 0){
+        return records.filter((r) => filterArray.includes(r.category_id));
+    }
     return records;
 }

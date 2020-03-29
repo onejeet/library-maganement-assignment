@@ -59,6 +59,15 @@
                 color: #FFFFFF;
                 border: none;
                 transition: all 0.2s ease;
+                min-height: 20px;
+                input{
+                    all: inherit;
+                    background: transparent;
+                    width: 100%;
+                    text-align: center;
+                    padding: 0;
+                    margin:0;
+                }
                 &:hover{
                     background-color: $primaryHover;
                 }
