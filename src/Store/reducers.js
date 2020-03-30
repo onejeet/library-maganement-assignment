@@ -26,11 +26,11 @@ const reducer = (state = defaultState, action) => {
         case actionConstants.IS_LOADING:
             return { ...state, isLoading: action.payload};
         case actionConstants.FETCH_LIBRARY:
-            return { ...state, isLoading:false, library: state.library.concat(action.payload.records), fetchNextPageLibrary: action.payload.fetchNextPage  };
+            return { ...state, isLoading:false, library: state.library.concat(action.payload.records), fetchNextPageLibrary: action.payload.fetchNextPage, message: action.payload.message  };
         case actionConstants.FETCH_SEARCH_RESULT:
-            return { ...state,  isLoading:false, searchResults: state.searchResults.concat(action.payload.records), fetchNextPageSearchResult: action.payload.fetchNextPage };
+            return { ...state,  isLoading:false, searchResults: state.searchResults.concat(action.payload.records), fetchNextPageSearchResult: action.payload.fetchNextPage, message: action.payload.message };
         case actionConstants.FETCH_MY_BOOKS:
-            return { ...state, isLoading:false, mybooks: state.mybooks.concat(action.payload.records), fetchNextPageMyBooks: action.payload.fetchNextPage };
+            return { ...state, isLoading:false, mybooks: state.mybooks.concat(action.payload.records), fetchNextPageMyBooks: action.payload.fetchNextPage, message: action.payload.message};
         case actionConstants.UPDATE_USER_INFO:
             return { ...state, userInfo: action.payload };
         case actionConstants.LOAD_CATEGORIES:

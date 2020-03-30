@@ -39,16 +39,27 @@ class Home extends Component{
         return (
             <div className="home">
                 {
+                    this.props.message &&
+                    <div className="message">
+                        {this.props.message}
+                    </div>
+                }
+                {
                     !this.props.isLoading ?
-                    <BookList
-                    records = {records}
-                    fetchNextPage = {this.props.fetchNextPage}
-                    updateSorting = {this.updateSorting}
-                    ascSorting = {this.state.ascSorting}
-                    categories = {this.props.categories}
-                    getSelectedCategories = {this.getSelectedCategories}
-                    history = {this.props.history}
-                    />
+                    <>
+                    {
+                        !this.props.message &&
+                        <BookList
+                        records = {records}
+                        fetchNextPage = {this.props.fetchNextPage}
+                        updateSorting = {this.updateSorting}
+                        ascSorting = {this.state.ascSorting}
+                        categories = {this.props.categories}
+                        getSelectedCategories = {this.getSelectedCategories}
+                        history = {this.props.history}
+                        />
+                    }
+                    </>
                     : <Loader />
                 }
             </div>
@@ -61,7 +72,8 @@ const mapStateToProps = (state) => {
         library: state.reducer.library,
         isLoading: state.reducer.isLoading,
         fetchNextPage: state.reducer.fetchNextPageLibrary,
-        categories: state.reducer.categories
+        categories: state.reducer.categories,
+        message: state.reducer.message
     }
 }
 

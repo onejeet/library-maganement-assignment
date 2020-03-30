@@ -39,18 +39,29 @@ class MyBooks extends Component {
         return (
             <div className="mybooks">
             {
+                this.props.message &&
+                <div className="message">
+                    {this.props.message}
+                </div>
+            }
+            {
                 !this.props.isLoading ?
-                <BookList
-                records = {records}
-                addbook = {true}
-                updateSorting = {this.updateSorting}
-                fetchNextPage = {this.props.fetchNextPage}
-                ascSorting = {this.state.ascSorting}
-                categories = {this.props.categories}
-                userInfo = {this.props.userInfo}
-                getSelectedCategories = {this.getSelectedCategories}
-                history = {this.props.history}
-                />
+                <>
+                    {
+                        !this.props.message &&
+                        <BookList
+                        records = {records}
+                        addbook = {true}
+                        updateSorting = {this.updateSorting}
+                        fetchNextPage = {this.props.fetchNextPage}
+                        ascSorting = {this.state.ascSorting}
+                        categories = {this.props.categories}
+                        userInfo = {this.props.userInfo}
+                        getSelectedCategories = {this.getSelectedCategories}
+                        history = {this.props.history}
+                        />
+                    }
+                </>
                 : <Loader />
             }
             </div>
@@ -64,7 +75,8 @@ const mapStateToProps = (state) => {
         userInfo: state.reducer.userInfo,
         fetchNextPage: state.reducer.fetchNextPageMyBooks,
         isLoading: state.reducer.isLoading,
-        categories: state.reducer.categories
+        categories: state.reducer.categories,
+        message: state.reducer.message
     }
 }
 

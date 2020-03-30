@@ -84,7 +84,8 @@ export function fetchBooks(type, search) {
                     type: actionConstants.FETCH_LIBRARY,
                     payload: {
                         records: lib,
-                        fetchNextPage: fetchNextPage
+                        fetchNextPage: fetchNextPage,
+                        message: ""
                     }
                 });
             }else if(type === "search-results"){
@@ -92,7 +93,8 @@ export function fetchBooks(type, search) {
                     type: actionConstants.FETCH_SEARCH_RESULT,
                     payload: {
                         records: lib,
-                        fetchNextPage: fetchNextPage
+                        fetchNextPage: fetchNextPage,
+                        message: ""
                     }
                 });
             }else if(type === "mybooks"){
@@ -100,14 +102,17 @@ export function fetchBooks(type, search) {
                     type: actionConstants.FETCH_MY_BOOKS,
                     payload: {
                         records: lib,
-                        fetchNextPage: fetchNextPage
+                        fetchNextPage: fetchNextPage,
+                        message: ""
                     }
                 });
             }
         }, function done(err) {
             if(err){ 
-                console.error(err); 
-                return; 
+                dispatch({
+                    type: actionConstants.UPDATE_MESSAGE,
+                    payload: "Network Error! Try again or check your internet connection."
+                });
             }
         });
     };

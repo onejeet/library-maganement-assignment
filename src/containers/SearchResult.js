@@ -42,16 +42,27 @@ class SearchResult extends Component {
         return (
             <div className="search-results">
                 {
+                    this.props.message &&
+                    <div className="message">
+                        {this.props.message}
+                    </div>
+                }
+                {
                     !this.props.isLoading ?
-                    <BookList
-                    records = {records}
-                    updateSorting = {this.updateSorting}
-                    fetchNextPage = {this.props.fetchNextPage}
-                    ascSorting = {this.state.ascSorting}
-                    categories = {this.props.categories}
-                    getSelectedCategories = {this.getSelectedCategories}
-                    history = {this.props.history}
-                    />
+                    <>
+                    {
+                        !this.props.message &&
+                        <BookList
+                        records = {records}
+                        updateSorting = {this.updateSorting}
+                        fetchNextPage = {this.props.fetchNextPage}
+                        ascSorting = {this.state.ascSorting}
+                        categories = {this.props.categories}
+                        getSelectedCategories = {this.getSelectedCategories}
+                        history = {this.props.history}
+                        />
+                    }
+                    </>
                     :<Loader />
                 }    
             </div>
@@ -64,7 +75,9 @@ const mapStateToProps = (state) => {
         searchResults: state.reducer.searchResults,
         isLoading: state.reducer.isLoading,
         fetchNextPage: state.reducer.fetchNextPageSearchResult,
-        categories: state.reducer.categories
+        categories: state.reducer.categories,
+        message: state.reducer.message
+
     }
 }
 
