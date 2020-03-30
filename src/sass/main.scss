@@ -49,6 +49,12 @@ input {
         @include loginPage($color-dark, $bckColor-dark, $box-shadow-color-dark);
         @include booklist($color-dark, $bckColor-dark, $box-shadow-color-dark);
         @include loader($color-light);
+        .footer{
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            color: $color-dark;
+        }
     }
     &.light{
         color:#000000;
@@ -57,5 +63,11 @@ input {
         @include loginPage($color-light, $bckColor-light, $box-shadow-color-light);
         @include booklist($color-light, $bckColor-light, $box-shadow-color-light);
         @include loader($color-dark);
+        .footer{
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            color: $color-light;
+        }
     }
 }

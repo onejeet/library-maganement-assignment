@@ -17,23 +17,14 @@ class Home extends Component {
         })
     }
 
-    selectCategory = (e, c) => {
-        const { categoryFilters } = this.state;
-        let index = categoryFilters.findIndex((x) => x == c.id);
-        if(index < 0){
-            categoryFilters.push(c.id);
-        }else{
-            categoryFilters.splice(index, 1);
-        }
-        
+    getSelectedCategories = (arr) => {
         this.setState({
-            categoryFilters
+            categoryFilters: arr
         })
     }
 
     render(){
         let { library } = this.props;
-        console.log(this.state);
         let records = filterByCategory(sortBooks(library, this.state.ascSorting), this.state.categoryFilters);
 
         return (
@@ -48,7 +39,7 @@ class Home extends Component {
                     fetchLibrary = {this.props.fetchLibrary}
                     categories = {this.props.categories}
                     syncWithLocalStorage = {this.props.syncWithLocalStorage}
-                    selectCategory = {this.selectCategory}
+                    getSelectedCategories = {this.getSelectedCategories}
                     />
                 }
             </div>

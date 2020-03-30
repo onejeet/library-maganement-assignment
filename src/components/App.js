@@ -129,27 +129,29 @@ class App extends Component {
             syncWithLocalStorage: this.syncWithLocalStorage
         };
         return (
-            <>
-                <div className={`app ${this.state.lightTheme ? 'light' : 'dark'} `}>
-                    {
-                        this.state.isAuthenticated &&
-                        <Header 
-                        lightTheme = {this.state.lightTheme}
-                        updateTheme = {this.updateTheme}
-                        logout = {this.logout}
-                        isAuthenticated = {this.state.isAuthenticated}
-                        userInfo = {this.state.userInfo}
-                        />
-                    }
-                    
-                    <div className="container">
-                        <Routes childProps={childProps} />
+            <div className={`app ${this.state.lightTheme ? 'light' : 'dark'} `}>
+                {
+                    this.state.isAuthenticated &&
+                    <Header 
+                    lightTheme = {this.state.lightTheme}
+                    updateTheme = {this.updateTheme}
+                    logout = {this.logout}
+                    isAuthenticated = {this.state.isAuthenticated}
+                    userInfo = {this.state.userInfo}
+                    />
+                }
+                
+                <div className="container">
+                    <Routes childProps={childProps} />
+                </div>
+                {
+                    this.state.isAuthenticated &&
+                    <div className="footer">
+                        &copy; Libra - Jitendra Sharma 2020
                     </div>
-                </div>
-                <div className="footer">
-                    
-                </div>
-            </>
+                }
+                
+            </div>
         );
     }
 }

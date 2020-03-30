@@ -45,7 +45,7 @@ class BookList extends Component{
                 categories = {props.categories}
                 addbook = {props.addbook}
                 syncWithLocalStorage = {props.syncWithLocalStorage}
-                selectCategory = {props.selectCategory}
+                getSelectedCategories = {props.getSelectedCategories}
                 />
                 <div className="book-list">
                     {

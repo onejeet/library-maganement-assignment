@@ -11,6 +11,8 @@ class ListControls extends Component {
             showCategoryBox: false,
             showClearButton: false,
             query: "",
+            categoryFilters : [],
+            showApplyFilter: false
         }
     }
 
@@ -18,6 +20,30 @@ class ListControls extends Component {
         this.setState({
             showCategoryBox: !this.state.showCategoryBox
         })
+    }
+
+    clickCategoryItem = (e, c) => {
+        const { categoryFilters } = this.state;
+        let index = categoryFilters.findIndex((x) => x == c.id);
+        if(index < 0){
+            categoryFilters.push(c.id);
+        }else{
+            categoryFilters.splice(index, 1);
+        }
+        
+        this.setState({
+            categoryFilters,
+            showApplyFilter: true
+        })
+    }
+
+    filterCategoryWise = () => {
+        this.setState({
+            showCategoryBox: false,
+            showClearButton: true,
+            showApplyFilter: false
+        })
+        this.props.getSelectedCategories(this.state.categoryFilters);
     }
 
     updateQuery = (e) => {
@@ -43,7 +69,10 @@ class ListControls extends Component {
         }
         this.setState({
             query: "",
+            categoryFilters: [],
             showClearButton: false
+        }, ()=> {
+            this.props.getSelectedCategories(this.state.categoryFilters);
         })
     }
 
@@ -53,7 +82,7 @@ class ListControls extends Component {
             <div className="controls">
                  {
                     state.showClearButton &&
-                    <div className="controls_button" onClick={this.clearControls}>
+                    <div className="controls_button primary" onClick={this.clearControls}>
                        Clear Search & Filters
                     </div>
                 }
@@ -82,32 +111,21 @@ class ListControls extends Component {
                         style={{ textShadow: '0 1px 0 rgba(0, 0, 0, 0.1)' }}
                     />
                 </div>
-                <div className="controls_button category-filter" onClick={this.toggleCategoryBox}>
-                    Filter By Category
-                    {/* {
-                        state.showCategoryBox &&
-  
-                        // <div className="category-box">
-                        //     {
-                        //         props.categories.map((cat) => 
-                        //             <div className="item" key={cat.id}>
-                        //                 <input type="checkbox" id={cat.id}
-                        //                     checked={this.state.isChecked}
-                        //                     onChange={this.toggleChange}
-                        //                     />
-                        //                 <label htmlFor={cat.id}>{cat.category}</label>
-                        //             </div>
-                        //         )
-                        //     }
-                        // </div>
-                    } */}
+                <div className={`controls_button ${this.state.showApplyFilter ? "primary": ""}`} onClick={this.toggleCategoryBox}>
+                    {
+                        this.state.showApplyFilter ?
+                        <span onClick={this.filterCategoryWise}>Apply Filter</span>
+                        : "Filter By Category"
+                    }
                 </div>
                 <CategoriesDropdown
                 showDropDown = {state.showCategoryBox}
-                closeDropDown = {this.toggleCategoryBox}
-                selectCategory = {props.selectCategory}
                 categories = {props.categories}
                 style={{top:"35px", right:"20px"}}
+                multiSelect = {true}
+                categoryFilters = {this.state.categoryFilters}
+                clickCategoryItem = {this.clickCategoryItem}
+                filterCategoryWise = {this.filterCategoryWise}
                 />
             </div>
         )

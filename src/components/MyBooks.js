@@ -19,11 +19,9 @@ class Home extends Component {
         })
     }
 
-    selectCategory = (e, c) => {
-        const { categoryFilters } = this.state;
-        categoryFilters.push(c.id);
+    getSelectedCategories = (arr) => {
         this.setState({
-            categoryFilters
+            categoryFilters: arr
         })
     }
 
@@ -43,7 +41,7 @@ class Home extends Component {
                 syncWithLocalStorage = {this.props.syncWithLocalStorage}
                 categories = {this.props.categories}
                 userInfo = {this.props.userInfo}
-                selectCategory = {this.selectCategory}
+                getSelectedCategories = {this.getSelectedCategories}
                 />
             </div>
         );

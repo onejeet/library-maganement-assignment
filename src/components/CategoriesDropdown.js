@@ -1,14 +1,12 @@
 import React, { Component }  from "react";
 
 class CategoriesDropdown extends Component {
+    constructor(props){
+        super(props);
+    }
 
     clickItem = (e, c) => {
-        if(e.target.classList.contains("selected")){
-            e.target.classList = 'dropdown-item';
-        }else{
-            e.target.classList += ' selected';
-        }
-        this.props.selectCategory(e, c);
+        ;
     }
 
     render(){
@@ -17,16 +15,34 @@ class CategoriesDropdown extends Component {
         return (
             <>
                 {
-                    props.showDropDown &&
-                    <div className="dropdown-wrapper" style={st}>
+                    props.showDropDown ?
+                    <>
                         {
-                            props.categories.filter((c) => props.query ? c.category.indexOf(props.query) !== -1 : c).map((c) => 
-                            <div className={`dropdown-item`} key={c.id} onClick={(e) => this.clickItem(e, c)}>
-                                {c.category}
+                            !props.multiSelect ?
+                            <div className="dropdown-wrapper" style={st}>
+                                {
+                                    props.categories.filter((c) => props.query ? c.category.indexOf(props.query) !== -1 : c).map((c) => 
+                                    <div className={`dropdown-item`} key={c.id} onClick={(e) => this.props.selectCategory(e, c)}>
+                                        {c.category}
+                                    </div>
+                                    )
+                                }
                             </div>
-                            )
+                            :
+                            <div className="dropdown-wrapper" style={st}>
+             
+                                {
+                                    props.categories.filter((c) => props.query ? c.category.indexOf(props.query) !== -1 : c).map((c) => 
+                                    <div className={`dropdown-item ${props.categoryFilters.includes(c.id) ? "selected" :""}`} key={c.id} onClick={(e) => props.clickCategoryItem(e,c)}>
+                                        {c.category}
+                                    </div>
+                                    )
+                                }
+                            </div>
                         }
-                    </div>
+                    </>
+                    : null
+                   
                 }
             </>
         );
