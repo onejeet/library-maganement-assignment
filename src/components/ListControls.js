@@ -66,9 +66,6 @@ class ListControls extends Component {
         this.props.history.push({
             pathname: `/search/${this.state.query}`
         })
-        this.setState({
-            showClearButton:true
-        })
     }
 
     clearControls =() => {
@@ -92,7 +89,7 @@ class ListControls extends Component {
                  {
                     state.showClearButton &&
                     <div className="controls_button primary" onClick={this.clearControls}>
-                       Clear Search & Filters
+                       Clear Filters
                     </div>
                 }
                 {

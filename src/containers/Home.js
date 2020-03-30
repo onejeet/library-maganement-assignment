@@ -60,7 +60,7 @@ const mapStateToProps = (state) => {
     return {
         library: state.reducer.library,
         isLoading: state.reducer.isLoading,
-        fetchNextPage: state.reducer.fetchNextPage,
+        fetchNextPage: state.reducer.fetchNextPageLibrary,
         categories: state.reducer.categories
     }
 }

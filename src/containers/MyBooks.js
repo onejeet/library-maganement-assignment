@@ -62,6 +62,7 @@ const mapStateToProps = (state) => {
     return {
         myBooks: state.reducer.mybooks,
         userInfo: state.reducer.userInfo,
+        fetchNextPage: state.reducer.fetchNextPageMyBooks,
         isLoading: state.reducer.isLoading,
         categories: state.reducer.categories
     }

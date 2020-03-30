@@ -61,7 +61,7 @@ const mapStateToProps = (state) => {
     return {
         searchResults: state.reducer.searchResults,
         isLoading: state.reducer.isLoading,
-        fetchNextPage: state.reducer.fetchNextPage,
+        fetchNextPage: state.reducer.fetchNextPageSearchResults,
         categories: state.reducer.categories
     }
 }
