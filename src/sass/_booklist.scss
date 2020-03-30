@@ -225,6 +225,10 @@
                 border: 1px solid $primary;
             }
         }
+        @media only screen and (max-width: 800px) {
+            top: 70px !important;
+            right: calc(50% - 100px) !important;
+        }
     }
 
 }
