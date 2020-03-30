@@ -1,14 +1,22 @@
 import React, { Component } from "react";
-import BookList from "./BookList";
+import { connect } from "react-redux";
+import BookList from "../components/BookList";
 import { sortBooks, filterByCategory } from "../Utilities/helper";
+import { fetchBooks, isLoading, loadCategories } from "../Store/actions";
+import Loader from "../components/Loader";
 
-class Home extends Component {
+class Home extends Component{
     constructor(props){
         super(props);
         this.state = {
             ascSorting: null,
             categoryFilters : []
         }
+    }
+    
+
+    componentDidMount(){
+        this.props.getLibrary();
     }
 
     updateSorting = () => {
@@ -26,25 +34,40 @@ class Home extends Component {
     render(){
         let { library } = this.props;
         let records = filterByCategory(sortBooks(library, this.state.ascSorting), this.state.categoryFilters);
-
         return (
             <div className="home">
                 {
-                    records.length > 0 &&
+                    !this.props.isLoading ?
                     <BookList
                     records = {records}
                     fetchNextPage = {this.props.fetchNextPage}
                     updateSorting = {this.updateSorting}
                     ascSorting = {this.state.ascSorting}
-                    fetchLibrary = {this.props.fetchLibrary}
                     categories = {this.props.categories}
-                    syncWithLocalStorage = {this.props.syncWithLocalStorage}
                     getSelectedCategories = {this.getSelectedCategories}
+                    history = {this.props.history}
                     />
+                    : <Loader />
                 }
             </div>
         );
     }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+    return {
+        library: state.reducer.library,
+        isLoading: state.reducer.isLoading,
+        fetchNextPage: state.reducer.fetchNextPage,
+        categories: state.reducer.categories
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getLibrary: () => {dispatch(fetchBooks("library")), dispatch(loadCategories()), dispatch(isLoading(true))},
+        fetchBooks: (type, search) => {dispatch(fetchBooks(type, search)), dispatch(isLoading(true))},
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -40,10 +40,18 @@ class ListControls extends Component {
     filterCategoryWise = () => {
         this.setState({
             showCategoryBox: false,
-            showClearButton: true,
             showApplyFilter: false
         })
         this.props.getSelectedCategories(this.state.categoryFilters);
+        if(this.state.categoryFilters.length > 0){
+            this.setState({
+                showClearButton:true
+            })
+        }else{
+            this.setState({
+                showClearButton:false
+            })
+        }
     }
 
     updateQuery = (e) => {
@@ -55,10 +63,11 @@ class ListControls extends Component {
 
     fetchSearchResult = (e) => {
         e.preventDefault();
-        this.props.fetchSearchResults(`SEARCH(LOWER("${this.state.query}"), LOWER(title))`);
-
+        this.props.history.push({
+            pathname: `/search/${this.state.query}`
+        })
         this.setState({
-            showClearButton: true
+            showClearButton:true
         })
     }
 

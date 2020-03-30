@@ -42,11 +42,10 @@ class BookList extends Component{
                 <ListControls
                 updateSorting = {props.updateSorting}
                 ascSorting = {props.ascSorting}
-                fetchSearchResults = {props.fetchLibrary}
                 categories = {props.categories}
                 addbook = {props.addbook}
-                syncWithLocalStorage = {props.syncWithLocalStorage}
                 getSelectedCategories = {props.getSelectedCategories}
+                history = {props.history}
                 />
                 <div className="book-list">
                     {

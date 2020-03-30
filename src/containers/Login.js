@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { API_KEY } from "../Utilities/Constants";
+import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import Loader from "./Loader";
+import Loader from "../components/Loader";
+import { updateMessage, isLoading, validateUser } from "../Store/actions";
 
 const FontAwesome = require('react-fontawesome');
 
@@ -11,14 +13,12 @@ class Login extends Component{
         this.state = {
             username: "",
             password: "",
-            error: "",
-            loading: false
         }
     }
 
     onChange = (e, type) => {
+        this.props.updateMessage("");
         this.setState({
-            error: "",
             [type] : e.target.value
         })
     }
@@ -30,27 +30,10 @@ class Login extends Component{
         })
         const {username, password} = this.state;
         if(username && password){
-            fetch(`https://api.airtable.com/v0/appbiRsagJs9mSVXY/user?api_key=${API_KEY}`)
-            .then((res) => res.json())
-            .then((data) => {
-                let user = data.records.filter((r) => {
-                    return (r.fields.username === username && r.fields.password === password)
-                })[0];
-                if(Object.keys(user.fields).length > 0){
-                    this.props.updateAuthentication(true, user.fields);
-                }
-            })
-            .catch((error) => {
-                this.setState({
-                    error: "Invalid username or password!",
-                    loading: false
-                })
-            });
+            this.props.updateLoading(true);
+            this.props.validateUser(username, password);
         }else{
-            this.setState({
-                error: "Username or password can't be blank.",
-                loading: false
-            })
+            this.props.updateMessage("Username or password can't be blank!");
         }
         
     }
@@ -73,14 +56,14 @@ class Login extends Component{
                     <input id="un" type="text" placeholder="Username" onChange={(e) => this.onChange(e, "username")} />
                     <input type="password" placeholder="Password" onChange={(e) => this.onChange(e, "password")} />
                     {
-                        this.state.error &&
+                        this.props.message &&
                         <div className="error">
-                            {this.state.error}
+                            {this.props.message}
                         </div>
                     }
                     <div className="submit-button">
                         {
-                            this.state.loading
+                            this.props.isLoading
                             ? <Loader />
                             : <input type="submit" value="Login" />
                         }
@@ -93,4 +76,19 @@ class Login extends Component{
     }
 }
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        message: state.reducer.message,
+        isLoading: state.reducer.isLoading,
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        validateUser : (username,password) => dispatch(validateUser(username,password)),
+        updateLoading : () => dispatch(isLoading(true)),
+        updateMessage: (msg) => dispatch(updateMessage(msg))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

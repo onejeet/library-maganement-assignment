@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import BookCard from "./BookCard";
-import CategoriesDropdown from "./CategoriesDropdown";
+import { connect } from "react-redux";
+import BookCard from "../components/BookCard";
+import CategoriesDropdown from "../components/CategoriesDropdown";
 import { API_KEY } from "../Utilities/Constants";
-let Airtable = require('airtable');
-let base = new Airtable({apiKey: API_KEY}).base('appbiRsagJs9mSVXY');
+import { addBook, isLoading } from "../Store/actions";
 
 class AddBook extends Component{
     constructor(props){
@@ -16,33 +16,11 @@ class AddBook extends Component{
                 id:"",
                 name: ""
             },
-            message: ""
         }
     }
-
-    onSubmit = (e) => {
-        e.preventDefault();
-        let self = this;
-        base('library').create([
-            {
-              "fields": {
-                "image_url": this.state.url,
-                "title": this.state.title,
-                "author": this.state.author,
-                "category_id": this.state.category.id,
-                "category": this.state.category.name,
-                "created_by_user_id": this.props.userInfo.id
-              }
-            }
-          ], function(err, records) {
-            if (err) {
-              self.setState({
-                  message: "Book add failed!"
-              })
-              return;
-            }
-            self.setState({
-                message: "Book Added Successfully!",
+    componentDidUpdate(){
+        if(this.props.message  === "Book Added Successfully!" && this.state.title){
+            this.setState({
                 title: "",
                 author: "",
                 url: "",
@@ -51,7 +29,21 @@ class AddBook extends Component{
                     name: ""
                 },
             })
-          });
+        }
+    }
+
+    onSubmit = (e) => {
+        e.preventDefault();
+        let self = this;
+        let obj =  {
+            "image_url": this.state.url,
+            "title": this.state.title,
+            "author": this.state.author,
+            "category_id": this.state.category.id,
+            "category": this.state.category.name,
+            "created_by_user_id": this.props.userInfo.id
+        }
+        this.props.addBook(obj);
     }
 
     onChange = (e, type) => {
@@ -83,13 +75,12 @@ class AddBook extends Component{
     }
 
     render(){
-        console.log(this.state);
         return (
             <>
                 {
-                    this.state.message &&
+                    this.props.message &&
                     <div className="message">
-                        {this.state.message}
+                        {this.props.message}
                     </div>
                 }
 
@@ -128,5 +119,20 @@ class AddBook extends Component{
         );
     }
 }
+const mapStateToProps = (state) => {
+    return {
+        message: state.reducer.message,
+        isLoading: state.reducer.isLoading,
+        categories: state.reducer.categories,
+        userInfo: state.reducer.userInfo
+    }
+}
 
-export default AddBook;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addBook: (o) => {dispatch(addBook(o)), dispatch(isLoading(true))},
+        fetchBooks: (type, search) => dispatch(fetchBooks(type, search)),
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddBook);
