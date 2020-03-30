@@ -16,7 +16,9 @@ class MyBooks extends Component {
     }
 
     componentDidMount(){
-        this.props.fetchBooks("mybooks", `(created_by_user_id = ${this.props.userInfo.id})`);
+        if(this.props.myBooks.length <= 0 ){
+            this.props.fetchBooks("mybooks", `(created_by_user_id = ${this.props.userInfo.id})`);
+        }
     }
 
     updateSorting = () => {

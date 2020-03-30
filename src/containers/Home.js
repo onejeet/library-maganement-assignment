@@ -16,7 +16,9 @@ class Home extends Component{
     
 
     componentDidMount(){
-        this.props.getLibrary();
+        if(this.props.library.length <= 0 ){
+            this.props.getLibrary();
+        }
     }
 
     updateSorting = () => {
