@@ -36,8 +36,8 @@
             }
         }
         @media only screen and (max-width: 500px) {
-            .branding{
-                &_title{
+            .navigation{
+                a{
                     font-size: 14px;
                 }
             }
