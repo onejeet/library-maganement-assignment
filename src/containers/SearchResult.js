@@ -14,14 +14,15 @@ class SearchResult extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState){
+        if(prevProps.match.params.query !== this.props.match.params.query){
+            this.props.fetchBooks("search-results", `SEARCH(LOWER("${this.props.match.params.query}"), LOWER(title))`)
+        }
+    }
+
     componentDidMount(){
         this.props.fetchBooks("search-results", `SEARCH(LOWER("${this.props.match.params.query}"), LOWER(title))`)
     }
-
-    componentWillUnmount(){
-        this.props.resetSearchResults();
-    }
-
 
     updateSorting = () => {
         this.setState({
@@ -58,17 +59,18 @@ class SearchResult extends Component {
     }
 }
 const mapStateToProps = (state) => {
+    console.log(state.reducer.fetchNextPageSearchResult);
     return {
         searchResults: state.reducer.searchResults,
         isLoading: state.reducer.isLoading,
-        fetchNextPage: state.reducer.fetchNextPageSearchResults,
+        fetchNextPage: state.reducer.fetchNextPageSearchResult,
         categories: state.reducer.categories
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchBooks: (type, search) => {dispatch(fetchBooks(type, search)), dispatch(isLoading(true))},
+        fetchBooks: (type, search) => {dispatch(resetSearchResults()), dispatch(fetchBooks(type, search)), dispatch(isLoading(true))},
         resetSearchResults: () => dispatch(resetSearchResults())
     }
 }
