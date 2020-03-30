@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import BookCard from "./BookCard";
 import Loader from "./Loader";
 import ListControls from "./ListControls";
+import { MAX_RECORDS } from "../Utilities/Constants";
 
 class BookList extends Component{
     constructor(props){
@@ -63,7 +64,7 @@ class BookList extends Component{
                 </div>
                 <div className="pagination">
                     {
-                        props.records.length  > 0 && props.records.length%48 === 0 &&
+                        props.records.length  > 0 && props.records.length%MAX_RECORDS === 0 &&
                         <div className="navigation-button" onClick={this.loadMore}>
                             {
                                 this.state.loading ?
