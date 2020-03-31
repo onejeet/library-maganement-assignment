@@ -30,8 +30,8 @@ export function validateUser(username, password){
                     return (r.fields.username === username && r.fields.password === password)
                 })[0];
                 if(Object.keys(user.fields).length > 0){
-                    localStorage.removeItem("userinfo");
-                    localStorage.setItem("userinfo", JSON.stringify(user.fields));
+                    sessionStorage.removeItem("userinfo");
+                    sessionStorage.setItem("userinfo", JSON.stringify({id: user.fields.id, username: user.fields.username}));
                     dispatch({
                         type: actionConstants.UPDATE_AUTHENTICATION,
                         payload: {

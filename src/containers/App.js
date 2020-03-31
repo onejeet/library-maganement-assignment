@@ -12,7 +12,7 @@ class App extends Component {
     }
 
     componentDidMount(){
-        let ls = JSON.parse(localStorage.getItem("userinfo"));
+        let ls = JSON.parse(sessionStorage.getItem("userinfo"));
         if(ls){
             this.props.authenticate(true, ls);          
         }
@@ -20,15 +20,14 @@ class App extends Component {
 
     logout = () => {
         this.props.authenticate(false, null);
-        localStorage.removeItem("library");
-        localStorage.removeItem("userinfo");
+        sessionStorage.removeItem("library");
+        sessionStorage.removeItem("userinfo");
         this.props.history.push("/login");
     }
 
     render(){
         let childProps = {
             isAuthenticated : this.props.isAuthenticated,
-            syncWithLocalStorage: this.syncWithLocalStorage,
         };
         return (
             <div className={`app ${this.props.lightTheme ? 'light' : 'dark'} `}>
