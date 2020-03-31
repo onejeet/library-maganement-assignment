@@ -34,11 +34,23 @@
                     margin-right: 5px;
                 }
             }
+            .active{
+                color: $primary;
+            }
         }
         @media only screen and (max-width: 500px) {
+            .branding{
+                &_title{
+                    margin: 0 8px;
+                }
+            }
             .navigation{
                 a{
-                    font-size: 14px;
+                    font-size: 13px;
+                }
+                > a:not(:last-of-type) {
+                    margin-right: 10px;
+                    width: min-content;
                 }
             }
         }

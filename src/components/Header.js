@@ -1,10 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 const FontAwesome = require('react-fontawesome');
 
 const Header = (props) => {
-
     return (
         <header className="head">
             <div className="branding">
@@ -17,10 +16,10 @@ const Header = (props) => {
                 <span className="branding_title">Libra</span>
             </div>
             <nav className="navigation">
-                <Link to="/">Library</Link>
+                <Link to="/" className={`${props.location.pathname === "/" ? "active" : ""}`}>Library</Link>
                 {
                     props.isAuthenticated &&
-                    <Link to="/mybooks">My Books</Link>
+                    <Link to="/mybooks" className={`${props.location.pathname.includes("mybooks") ? "active" : ""}`}>My Books</Link>
                 }
                 {
                     props.isAuthenticated ?
@@ -53,4 +52,4 @@ const Header = (props) => {
     );
 }
 
-export default Header;
+export default withRouter(Header);
